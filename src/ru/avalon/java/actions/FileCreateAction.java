@@ -1,14 +1,37 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ru.avalon.java.actions;
 
-/**
- *
- * @author Yurii
- */
-public class FileCreateAction {
-    
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class FileCreateAction implements Action{
+
+    Path source;
+
+    public FileCreateAction(String source) {
+        this.source = Paths.get(source);
+    }
+
+    public void start() {
+        new Thread(this).start();
+        System.out.println("Запускаем поток создания");
+    }
+
+    public void run() {
+        try {
+            Files.createFile(source);
+            System.out.println("\nСоздание " + 
+          source + " завершено.\n> ");
+        } catch (IOException ex) {
+            System.out.println("Ошибка создания файла"
+                    + ex.getMessage());
+        }
+    }
+
+    @Override
+    public void close() throws Exception {
+        source = null;
+    }
 }
